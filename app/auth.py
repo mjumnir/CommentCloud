@@ -20,6 +20,7 @@ def login():
             return redirect(url_for('protected'))
     return redirect(url_for('index'))
 
+# Token generator
 def get_token():
     expiration_date = datetime.datetime.utcnow() + \
             datetime .timedelta(seconds=100)
@@ -27,6 +28,9 @@ def get_token():
             app.secret_key, algorithm='HS256')
     return token
 
+# Token decorator
+# When called you need to pass a valid
+# token under the variable token
 def token_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):

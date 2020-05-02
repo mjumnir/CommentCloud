@@ -9,7 +9,17 @@ import os
 def index():
     if request.method == 'POST':
         return "COMMENT CLOUD", 200
+    flash("Username: test@t.com")
+    flash("Password: Test")
     return render_template('login.html')
+
+
+@app.route('/gen_token', methods=['GET'])
+@login_required
+def gen_token():
+    token = auth.get_token()
+    return token
+
 
 @app.route('/test_token', methods=['GET'])
 @auth.token_required
@@ -25,13 +35,15 @@ def logout():
 @login_required
 def protected():
     flash(current_user.id)
-    flash(str(auth.get_token()))
+    flash('Add the generated token to the following endpoint')
+    flash('/test_token?token=')
     return render_template('success.html')
 
 @login.unauthorized_handler
 def unauthorized_handler():
-    # return redirect(url_for("index"))
-    return "WTF !!"
+    flash("Please login before Пожалуйста!")
+    return redirect(url_for("index"))
+    # return "WTF !!"
 
 @app.route('/js/<string:script>')
 def rout_js(script):
